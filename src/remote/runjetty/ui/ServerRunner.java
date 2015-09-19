@@ -8,6 +8,8 @@ import java.awt.*;
 
 /**
  * Created by max on 18.09.15.
+ *
+ * Swing ui to start and stop the server
  */
 public class ServerRunner extends JFrame{
 

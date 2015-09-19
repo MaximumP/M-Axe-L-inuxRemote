@@ -8,6 +8,8 @@ import java.io.IOException;
 
 /**
  * Created by max on 18.09.15.
+ *
+ * SSH login form page
  */
 //TODO: i think this can be declared in the web.xml or another file
 @WebServlet(

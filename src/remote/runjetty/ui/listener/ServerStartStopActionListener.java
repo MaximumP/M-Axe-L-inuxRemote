@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 
 /**
  * Created by max on 18.09.15.
+ *
+ * ActionListener tp start and stop the jetty server
  */
 public class ServerStartStopActionListener implements ActionListener{
 

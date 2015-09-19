@@ -9,6 +9,10 @@ public class AppContextBuilder {
 
     private WebAppContext context;
 
+    /**
+     * Creates the WebAppContext for the jetty server
+     * @return Context used by jetty
+     */
     public WebAppContext buildWebAppContext() {
 
         context = new WebAppContext();

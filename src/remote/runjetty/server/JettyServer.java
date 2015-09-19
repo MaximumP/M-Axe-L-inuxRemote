@@ -5,6 +5,8 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 
 /**
  * Created by max on 18.09.15.
+ *
+ * Jetty Server wrapper
  */
 public class JettyServer {
 
