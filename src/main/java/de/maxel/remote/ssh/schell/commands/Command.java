@@ -13,11 +13,13 @@ import java.io.InputStream;
 /**
  * Created by max on 18.09.15.
  */
-public abstract class Command {
+public class Command {
 
     private Session session;
+    private String command;
 
-    public Command(Session session) {
+    public Command(Session session, String command) {
+        this.command = command;
         this.session = session;
     }
 
@@ -26,7 +28,7 @@ public abstract class Command {
         StringBuilder retVal = new StringBuilder();
         try {
             Channel channel = session.openChannel("exec");
-            ((ChannelExec)channel).setCommand(createCommand());
+            ((ChannelExec)channel).setCommand(command);
             ((ChannelExec)channel).setErrStream(System.err);
             channel.setInputStream(null);
 
@@ -39,12 +41,10 @@ public abstract class Command {
                     int i=inputStream.read(tmp, 0, 1024);
                     if(i<0)break;
                     retVal.append(new String(tmp, 0, i));
-                    //System.out.print(new String(tmp, 0, i));
                 }
                 if(channel.isClosed()){
-                    if(inputStream.available()>0) continue;
-                    retVal.append("exit-status: " + channel.getExitStatus());
-                    //System.out.println("exit-status: "+channel.getExitStatus());
+                    if(inputStream.available()>0)
+                        continue;
                     break;
                 }
                 try{Thread.sleep(1000);}catch(Exception ee){}
@@ -57,9 +57,4 @@ public abstract class Command {
 
         return retVal.toString();
     }
-
-    public abstract void addArgument(String argument);
-    public abstract void clearArguments();
-
-    protected abstract String createCommand();
 }

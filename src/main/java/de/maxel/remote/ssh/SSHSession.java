@@ -1,41 +1,101 @@
 package de.maxel.remote.ssh;
 
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.UIKeyboardInteractive;
-import com.jcraft.jsch.UserInfo;
+import com.jcraft.jsch.*;
 import de.maxel.remote.ssh.schell.commands.Command;
-import de.maxel.remote.ssh.schell.commands.Ls;
-
-import javax.swing.*;
 
 /**
  * Created by max on 18.09.15.
+ * TODO: handle exceptions
  */
 public final class SSHSession {
-    public static void startSession(String host, String user, String password) {
+
+    private static SSHSession sshSession;
+    public static SSHSession getInstance(String host, String user, String password) {
+        if (sshSession == null)
+            sshSession = new SSHSession(host, user, password);
+        return sshSession;
+    }
+    public static SSHSession getInstance() {
+        return sshSession;
+    }
+    private SSHSession(String host, String user, String password) {
+        this.host = host;
+        this.user = user;
+        this.password = password;
+    }
+
+    private Session session;
+    //for later use in case of a session timeout
+    private String host;
+    private String user;
+    private String password;
+
+    /**
+     * starts a ssh session
+     */
+    public void startSession() {
         try{
-            JSch jsch=new JSch();
-            com.jcraft.jsch.Session session=jsch.getSession(user, host, 22);
-            session.setPassword(password);
-
-            session.setUserInfo(new MyUserInfo());
-            session.connect();
-
-            Command command = new Ls(session);
-            command.addArgument("lF");
+            initializeSession();
+            Command command = new Command(session, "find -maxdepth 1 -type f");
+            //command.addArgument("lF");
             String commandResult = command.executeCommand();
-
+            System.out.println("session started...");
             System.out.print(commandResult);
-
-            session.disconnect();
         }
         catch(Exception e){
             System.out.println(e);
         }
     }
 
-    public static class MyUserInfo implements UserInfo, UIKeyboardInteractive {
+    /**
+     * ends a ssh session
+     */
+    public void endSession() {
+        if (session != null && session.isConnected()) {
+            session.disconnect();
+            System.out.println("session terminated...");
+        }
+    }
+
+    /**
+     * initialize the session in case of an timeout
+     * @return the session or null if there are missing login details
+     */
+    protected Session getSession() {
+        if (session != null && session.isConnected())
+            return session;
+
+        if (host != null && !host.isEmpty() &&
+            user != null && !user.isEmpty() &&
+            password != null && !password.isEmpty())
+            initializeSession();
+        else
+            return null;
+
+        return session;
+
+    }
+
+    private void initializeSession() {
+        JSch jsch=new JSch();
+        try {
+            session=jsch.getSession(user, host, 22);
+        } catch (JSchException e) {
+            e.printStackTrace();
+        }
+        session.setPassword(password);
+
+        session.setUserInfo(new MyUserInfo());
+        try {
+            session.connect();
+        } catch (JSchException e) {
+            e.printStackTrace();
+        }
+    }
+
+        private static class MyUserInfo implements UserInfo, UIKeyboardInteractive {
         public String getPassword(){ return null; }
+        //TODO: the user has to be ask if it is an unknown key
         public boolean promptYesNo(String str){
             return true;
         }
@@ -49,8 +109,8 @@ public final class SSHSession {
                                                   String[] prompt,
                                                   boolean[] echo){
 
-            return null;
+                return null;
+            }
         }
-    }
 }
 

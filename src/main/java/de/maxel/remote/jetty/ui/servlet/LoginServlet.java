@@ -38,9 +38,11 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+
         String host = request.getParameter("host");
         String user = request.getParameter("user");
         String password = request.getParameter("password");
-        SSHSession.startSession(host, user, password);
+        SSHSession session = SSHSession.getInstance(host, user, password);
+        session.startSession();
     }
 }
