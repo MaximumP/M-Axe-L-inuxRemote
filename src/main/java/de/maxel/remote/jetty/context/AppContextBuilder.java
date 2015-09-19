@@ -16,7 +16,7 @@ public class AppContextBuilder {
     public WebAppContext buildWebAppContext() {
 
         context = new WebAppContext();
-        context.setDescriptor(context + "/web/WEB-INF/web.xml");
+        context.setDescriptor(context + "/WEB-INF/web.xml");
         context.setResourceBase(".");
         context.setContextPath("/maxel");
         return context;
