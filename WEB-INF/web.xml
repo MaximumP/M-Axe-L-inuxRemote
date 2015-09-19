@@ -16,4 +16,12 @@
         <servlet-name>loginServlet</servlet-name>
         <url-pattern>/Login</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>logoutServlet</servlet-name>
+        <servlet-class>de.maxel.remote.jetty.ui.servlet.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>logoutServlet</servlet-name>
+        <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
 </web-app>

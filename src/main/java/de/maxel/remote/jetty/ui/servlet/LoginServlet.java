@@ -44,5 +44,14 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         SSHSession session = SSHSession.getInstance(host, user, password);
         session.startSession();
+        response.setStatus(HttpServletResponse.SC_OK);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/ui/Login.jsp");
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
