@@ -1,16 +1,17 @@
+package de.maxel.remote;
+
+import de.maxel.remote.jetty.context.AppContextBuilder;
+import de.maxel.remote.jetty.server.JettyServer;
+import de.maxel.remote.jetty.ui.ServerRunner;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import remote.runjetty.context.AppContextBuilder;
-import remote.runjetty.server.JettyServer;
-import remote.runjetty.ui.ServerRunner;
-import ssh.SSHSession;
 
 import java.awt.*;
 
 /**
- * Created by max on 17.09.15.
+ * Created by max on 19.09.15.
  */
-public class Test{
+public class Maxel {
     public static void main(String[] arg) {
         //SSHSession.startSession();
 
@@ -21,7 +22,7 @@ public class Test{
         jettyServer.setHandler(contexts);
 
         Runnable runner = new Runnable() {
-            @Override
+
             public void run() {
                 new ServerRunner(jettyServer);
             }
