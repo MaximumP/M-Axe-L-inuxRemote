@@ -13,7 +13,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -42,5 +42,9 @@
     <orderEntry type="library" name="Maven: org.eclipse.jetty.orbit:javax.el:2.2.0.v201303151357" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty.orbit:com.sun.el:2.2.0.v201303151357" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty.orbit:org.eclipse.jdt.core:3.8.2.v20130121" level="project" />
+    <orderEntry type="library" name="org.eclipse.jetty:jetty-server:9.0.3.v20130506" level="project" />
+    <orderEntry type="library" name="jsch:jsch:0.1.8" level="project" />
+    <orderEntry type="library" name="org.eclipse.jetty:jetty-jsp:9.0.3.v20130506" level="project" />
+    <orderEntry type="library" name="org.eclipse.jetty:jetty-webapp:9.0.3.v20130506" level="project" />
   </component>
 </module>
