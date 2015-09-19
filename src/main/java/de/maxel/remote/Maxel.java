@@ -10,6 +10,8 @@ import java.awt.*;
 
 /**
  * Created by max on 19.09.15.
+ *
+ * Application start
  */
 public class Maxel {
     public static void main(String[] arg) {
@@ -20,13 +22,12 @@ public class Maxel {
 
         final JettyServer jettyServer = new JettyServer();
         jettyServer.setHandler(contexts);
-
-        Runnable runner = new Runnable() {
-
-            public void run() {
-                new ServerRunner(jettyServer);
-            }
-        };
+        try {
+            jettyServer.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Runnable runner = () -> new ServerRunner(jettyServer);
         EventQueue.invokeLater(runner);
     }
 }
