@@ -1,5 +1,9 @@
 package de.maxel.remote.jetty.ui.servlet;
 
+import de.maxel.remote.ssh.SSHSession;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,10 +26,11 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
         response.setStatus(HttpServletResponse.SC_OK);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/ui/Login.jsp");
         try {
-            response.getWriter().write("Hallo");
-            response.getWriter().flush();
-            response.getWriter().close();
+            dispatcher.forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,8 +41,6 @@ public class LoginServlet extends HttpServlet {
         String host = request.getParameter("host");
         String user = request.getParameter("user");
         String password = request.getParameter("password");
-        System.out.println(host);
-        System.out.println(user);
-        System.out.println(password);
+        SSHSession.startSession(host, user, password);
     }
 }
