@@ -6,15 +6,21 @@ import de.maxel.remote.ssh.SSHSession;
 /**
  * Created by max on 18.09.15.
  *
- * Swing ui to start and stop the server
+ * Starts the server and register the cleanup shutdown hook
  */
 public class ServerRunner {
 
     public ServerRunner(final JettyServer server) {
-        SSHSession sshSession = SSHSession.getInstance();
-        if (sshSession != null)
-            sshSession.endSession();
+        try {
+            server.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            SSHSession session = SSHSession.getInstance();
+            if (session != null)
+                session.endSession();
+
             if (server.isRunning()) {
                 try {
                     server.stop();
