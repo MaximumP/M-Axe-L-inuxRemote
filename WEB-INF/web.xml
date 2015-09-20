@@ -24,4 +24,12 @@
         <servlet-name>logoutServlet</servlet-name>
         <url-pattern>/Logout</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>fileManagerServlet</servlet-name>
+        <servlet-class>de.maxel.remote.jetty.ui.servlet.FileManagerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>fileManagerServlet</servlet-name>
+        <url-pattern>/FileManager</url-pattern>
+    </servlet-mapping>
 </web-app>

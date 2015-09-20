@@ -36,11 +36,7 @@ public final class SSHSession {
     public void startSession() {
         try{
             initializeSession();
-            Command command = new Command(session, "find -maxdepth 1 -type f");
-            //command.addArgument("lF");
-            String commandResult = command.executeCommand();
             System.out.println("session started...");
-            System.out.print(commandResult);
         }
         catch(Exception e){
             System.out.println(e);
@@ -61,7 +57,7 @@ public final class SSHSession {
      * initialize the session in case of an timeout
      * @return the session or null if there are missing login details
      */
-    protected Session getSession() {
+    public Session getSession() {
         if (session != null && session.isConnected())
             return session;
 
