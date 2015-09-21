@@ -15,18 +15,13 @@ import java.io.IOException;
  *
  * SSH login form page
  */
-//TODO: i think this can be declared in the web.xml or another file
-@WebServlet(
-        description = "Login Servlet",
-        urlPatterns = "/ui/Login"
-)
 public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
         response.setStatus(HttpServletResponse.SC_OK);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/ui/Login.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/ui/layout.jsp");
         try {
             dispatcher.forward(request, response);
         } catch (ServletException e) {
@@ -45,11 +40,8 @@ public class LoginServlet extends HttpServlet {
         SSHSession session = SSHSession.getInstance(host, user, password);
         session.startSession();
         response.setStatus(HttpServletResponse.SC_OK);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/ui/Login.jsp");
         try {
-            dispatcher.forward(request, response);
-        } catch (ServletException e) {
-            e.printStackTrace();
+            response.sendRedirect("/maxel/FileManager");
         } catch (IOException e) {
             e.printStackTrace();
         }

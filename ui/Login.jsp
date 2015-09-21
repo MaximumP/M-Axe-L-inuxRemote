@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Remote Control</title>
-        <link rel="stylesheet" type="text/css" href="ui/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="ui/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" type="text/css" href="ui/css/maxel.css">
-    </head>
-    <body>
-        <%@include file='navbar.jsp'%>
-        <div class="content">
+
             <form action="Login" method="post" name="login-form"
                   class="form-horizontal col-sm-5 col-sm-offset-3">
                 <div class="form-group">
@@ -35,6 +25,3 @@
                     </div>
                 </div>
             </form>
-        </div>
-    </body>
-</html>

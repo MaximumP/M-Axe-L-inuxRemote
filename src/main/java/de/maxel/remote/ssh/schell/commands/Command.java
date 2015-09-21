@@ -5,6 +5,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import de.maxel.remote.ssh.SSHSession;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,20 +16,21 @@ import java.io.InputStream;
  */
 public class Command {
 
-    private Session session;
     private String command;
 
-    public Command(Session session, String command) {
+    public Command(String command) {
         this.command = command;
-        this.session = session;
     }
 
     public String executeCommand() {
 
         StringBuilder retVal = new StringBuilder();
+        Session session = SSHSession.getInstance().getSession();
+
         try {
             Channel channel = session.openChannel("exec");
-            ((ChannelExec)channel).setCommand(command);
+            String execCommand = command;
+            ((ChannelExec)channel).setCommand(execCommand);
             ((ChannelExec)channel).setErrStream(System.err);
             channel.setInputStream(null);
 
