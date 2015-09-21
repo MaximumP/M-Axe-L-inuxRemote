@@ -1,7 +1,7 @@
 package de.maxel.remote.ssh;
 
 import com.jcraft.jsch.*;
-import de.maxel.remote.ssh.schell.commands.Command;
+
 
 /**
  * Created by max on 18.09.15.
