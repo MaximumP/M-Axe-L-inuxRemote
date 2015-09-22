@@ -8,6 +8,7 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 
 import java.awt.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by max on 19.09.15.
@@ -16,7 +17,9 @@ public class Maxel {
     public static void main(String[] arg) {
 
         Shell shell = new Shell("max", "localhost", "duewMW78");
-        //shell.write("ls -lF");
+        shell.write("pwd\n");
+        shell.write("cd Music\n");
+        shell.write("pwd\n");
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         contexts.setHandlers(new Handler[]{new AppContextBuilder().buildWebAppContext()});
