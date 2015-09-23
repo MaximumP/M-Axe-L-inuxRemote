@@ -22,7 +22,7 @@ public class Maxel {
         shell.write("cd Music\n");
         shell.write("pwd\n");*/
 
-        Shell shell = new Shell("root", "37.221.196.247", "vmghhU8mQsb7TEX");
+
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         contexts.setHandlers(new Handler[]{new AppContextBuilder().buildWebAppContext()});
