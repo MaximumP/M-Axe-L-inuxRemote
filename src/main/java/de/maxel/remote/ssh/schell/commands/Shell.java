@@ -47,7 +47,7 @@ public class Shell {
             out = new PipedOutputStream((PipedInputStream) inputStream);
             channel.setInputStream(inputStream);
 
-            //create a output stream the shell can write to our input stream
+            //create a output stream the shell can write to
             final OutputStream outputStream = new PipedOutputStream();
             //receives the data of the shell
             in = new PipedInputStream((PipedOutputStream) outputStream);
@@ -64,8 +64,11 @@ public class Shell {
     /**
      * sends a command to the shell
      * @param command: the command to be executed on the remove shell
+     *                 a new line has to be used to separate commands
      */
     public void write(String command) {
+        if (!command.endsWith("\n"))
+            command = command + "\n";
         try {
             out.write(command.getBytes());
         } catch (Exception e) {

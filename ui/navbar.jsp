@@ -2,7 +2,7 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Maxel</a>
+                <a class="navbar-brand" href="/maxel/Login">Maxel</a>
             </div>
 
             <div>

@@ -16,10 +16,10 @@ import java.util.concurrent.TimeUnit;
 public class Maxel {
     public static void main(String[] arg) {
 
-        Shell shell = new Shell("max", "localhost", "duewMW78");
+        /*Shell shell = new Shell("max", "localhost", "duewMW78");
         shell.write("pwd\n");
         shell.write("cd Music\n");
-        shell.write("pwd\n");
+        shell.write("pwd\n");*/
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         contexts.setHandlers(new Handler[]{new AppContextBuilder().buildWebAppContext()});
