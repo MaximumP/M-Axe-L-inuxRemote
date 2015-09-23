@@ -3,6 +3,7 @@ package de.maxel.remote.ssh.schell.commands;
 import com.jcraft.jsch.*;
 
 import java.io.*;
+import java.util.Scanner;
 
 /**
  * Created by max on 20.09.15.
@@ -54,11 +55,24 @@ public class Shell {
             channel.setOutputStream(outputStream);
             channel.connect();
             read();
+            listenToTerminal();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     *
+     * http://stackoverflow.com/a/26473083/1847899
+     */
+    private void listenToTerminal(){
+        while (true) {
+            Scanner scanner = new Scanner(System.in);
+            String x = scanner.nextLine();
+            write(x);
+        }
     }
 
     /**

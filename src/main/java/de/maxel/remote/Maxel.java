@@ -17,9 +17,12 @@ public class Maxel {
     public static void main(String[] arg) {
 
         /*Shell shell = new Shell("max", "localhost", "duewMW78");
+
         shell.write("pwd\n");
         shell.write("cd Music\n");
         shell.write("pwd\n");*/
+
+        Shell shell = new Shell("root", "37.221.196.247", "vmghhU8mQsb7TEX");
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         contexts.setHandlers(new Handler[]{new AppContextBuilder().buildWebAppContext()});
