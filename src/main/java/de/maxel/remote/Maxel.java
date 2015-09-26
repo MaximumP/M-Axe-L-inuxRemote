@@ -2,6 +2,7 @@ package de.maxel.remote;
 
 import de.maxel.remote.config.ConfigProperties;
 import de.maxel.remote.ssh.SSHJsftp;
+import de.maxel.remote.ssh.SshClient;
 import net.schmizz.sshj.common.IOUtils;
 import net.schmizz.sshj.connection.channel.direct.Session;
 
@@ -23,8 +24,11 @@ public class Maxel {
         loadPropsTmp();
         ConfigProperties properties = ConfigProperties.getInstance();
 
-        SSHJsftp testsFtp = new SSHJsftp(properties.getHost(), properties.getUser(),
+        SshClient.getInstance().connect(properties.getHost(), properties.getUser(),
                 properties.getPassword(), properties.getHostkey());
+
+
+        SSHJsftp testsFtp = new SSHJsftp(SshClient.getInstance().getSshClient());
 
         /*ContextHandlerCollection contexts = new ContextHandlerCollection();
         contexts.setHandlers(new Handler[]{new AppContextBuilder().buildWebAppContext()});

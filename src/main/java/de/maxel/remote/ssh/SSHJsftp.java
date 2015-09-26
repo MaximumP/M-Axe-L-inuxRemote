@@ -17,21 +17,10 @@ public class SSHJsftp {
     private SFTPClient sftpClient = null;
     private String workingDirectory = "~/";
 
-    public SSHJsftp(String host, String username, String password, String hostKey) {
-        sshClient = new SSHClient();
-
+    public SSHJsftp(SSHClient client) {
+        sshClient = client;
         try {
-            Session session = sshClient.startSession();
-            Session.Command cmd = session.exec("pdw\n");
-            workingDirectory = IOUtils.readFully(cmd.getInputStream()).toString();
-            cmd.close();
-            session.close();
-
-            sshClient.addHostKeyVerifier(hostKey);
-            sshClient.connect(host);
-            sshClient.authPassword(username, password);
             sftpClient = sshClient.newSFTPClient();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
