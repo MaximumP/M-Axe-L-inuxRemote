@@ -16,7 +16,7 @@
         	<tr>
         	<td>
         	<div id="login-logo">
-        		<img src="./ui/img/magpie.png" style="padding-right: 32px;"/>
+        		<img src="./ui/img/sb.png" style="padding-right: 32px;"/>
         </td><td>
           <form action="Login" method="post" name="login-form" class="form form--login">
 
