@@ -33,7 +33,6 @@ public class SshClient {
 
     public void connect(String host, String username, String password, String hostKey) {
         sshClient = new SSHClient();
-
         try {
             sshClient.addHostKeyVerifier(hostKey);
             sshClient.connect(host);
