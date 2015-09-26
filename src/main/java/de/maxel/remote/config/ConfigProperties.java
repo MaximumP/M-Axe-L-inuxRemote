@@ -15,11 +15,13 @@ public class ConfigProperties {
     private static final String PASSWORD = "password";
     private static final String HOST     = "host";
     private static final String USER     = "user";
+    private static final String HOSTKEY  = "hostkey";
 
     //DEFAULT LOGIN VALUES
-    private String password = "admin";
-    private String host     = "host";
-    private String user     = "user";
+    private String password   = "admin";
+    private String host       = "host";
+    private String user       = "user";
+    private String hostkey = "hostkey";
 
 
     private Properties props = null; // Achtung werden nach dem Initialisieren auf Null gesetzt
@@ -61,6 +63,7 @@ public class ConfigProperties {
         this.password = getOptionalString(PASSWORD,password);
         this.host = getOptionalString(HOST,host);
         this.user = getOptionalString(USER, user);
+        this.hostkey = getOptionalString(HOSTKEY, hostkey);
 
     }
 
@@ -76,6 +79,7 @@ public class ConfigProperties {
         return this.user;
     }
 
+    public String getHostkey() { return this.hostkey; }
 
     //HELPER
 

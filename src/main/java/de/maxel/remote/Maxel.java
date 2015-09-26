@@ -4,6 +4,7 @@ import de.maxel.remote.config.ConfigProperties;
 import de.maxel.remote.jetty.context.AppContextBuilder;
 import de.maxel.remote.jetty.server.JettyServer;
 import de.maxel.remote.jetty.ui.ServerRunner;
+import de.maxel.remote.ssh.SSHJsftp;
 import de.maxel.remote.ssh.schell.commands.Shell;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -17,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by max on 19.09.15.
+ *
+ * Program start
  */
 public class Maxel {
 
@@ -25,7 +28,10 @@ public class Maxel {
         loadPropsTmp();
         ConfigProperties properties = ConfigProperties.getInstance();
 
-        Shell shell = new Shell(properties.getUser(), properties.getHost(), properties.getPassword());
+        SSHJsftp testsFtp = new SSHJsftp(properties.getHost(), properties.getUser(),
+                properties.getPassword(), properties.getHostkey());
+        testsFtp.printDirContent(".");
+
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         contexts.setHandlers(new Handler[]{new AppContextBuilder().buildWebAppContext()});

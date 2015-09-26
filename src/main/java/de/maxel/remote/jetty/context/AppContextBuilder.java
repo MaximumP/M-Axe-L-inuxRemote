@@ -4,10 +4,10 @@ import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
  * Created by max on 18.09.15.
+ *
+ * Creates the context for the Jetty server
  */
 public class AppContextBuilder {
-
-    private WebAppContext context;
 
     /**
      * Creates the WebAppContext for the jetty server
@@ -15,7 +15,7 @@ public class AppContextBuilder {
      */
     public WebAppContext buildWebAppContext() {
 
-        context = new WebAppContext();
+        WebAppContext context = new WebAppContext();
         context.setDescriptor(context + "/WEB-INF/web.xml");
         context.setResourceBase(".");
         context.setContextPath("/maxel");

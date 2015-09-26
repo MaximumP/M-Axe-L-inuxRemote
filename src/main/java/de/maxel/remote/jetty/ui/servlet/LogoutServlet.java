@@ -11,6 +11,8 @@ import java.io.IOException;
 
 /**
  * Created by max on 20.09.15.
+ *
+ * Closes the ssh session
  */
 public class LogoutServlet extends HttpServlet {
 
@@ -22,9 +24,7 @@ public class LogoutServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/ui/Login.jsp");
         try {
             dispatcher.forward(request, response);
-        } catch (ServletException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ServletException | IOException e) {
             e.printStackTrace();
         }
     }

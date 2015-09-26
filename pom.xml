@@ -28,5 +28,15 @@
             <artifactId>jetty-jsp</artifactId>
             <version>9.0.3.v20130506</version>
         </dependency>
+        <dependency>
+            <groupId>ch.ethz.ganymed</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>262</version>
+        </dependency>
+        <dependency>
+            <groupId>net.schmizz</groupId>
+            <artifactId>sshj</artifactId>
+            <version>0.10.0</version>
+        </dependency>
     </dependencies>
 </project>

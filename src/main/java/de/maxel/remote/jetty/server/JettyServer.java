@@ -36,8 +36,4 @@ public class JettyServer {
     public boolean isRunning() {
         return server.isRunning();
     }
-
-    public boolean isStopped() {
-        return server.isStopped();
-    }
 }
