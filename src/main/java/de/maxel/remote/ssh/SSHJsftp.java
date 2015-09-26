@@ -1,18 +1,11 @@
 package de.maxel.remote.ssh;
 
-
-import net.schmizz.concurrent.Event;
 import net.schmizz.sshj.SSHClient;
-import net.schmizz.sshj.common.StreamCopier;
-import net.schmizz.sshj.connection.ConnectionException;
+import net.schmizz.sshj.common.IOUtils;
 import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.sftp.RemoteResourceInfo;
 import net.schmizz.sshj.sftp.SFTPClient;
-import net.schmizz.sshj.transport.TransportException;
-
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -22,110 +15,50 @@ public class SSHJsftp {
 
     private SSHClient sshClient = null;
     private SFTPClient sftpClient = null;
-    private Session session  = null;
+    private String workingDirectory = "~/";
 
     public SSHJsftp(String host, String username, String password, String hostKey) {
         sshClient = new SSHClient();
+
         try {
+            Session session = sshClient.startSession();
+            Session.Command cmd = session.exec("pdw\n");
+            workingDirectory = IOUtils.readFully(cmd.getInputStream()).toString();
+            cmd.close();
+            session.close();
+
             sshClient.addHostKeyVerifier(hostKey);
             sshClient.connect(host);
             sshClient.authPassword(username, password);
             sftpClient = sshClient.newSFTPClient();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void printDirContent(String path) {
+    public List<RemoteResourceInfo> ls() {
+        List<RemoteResourceInfo> dirContent = null;
         try {
-            List<RemoteResourceInfo> res = sftpClient.ls(path);
-            for (RemoteResourceInfo info : res) {
-                System.out.println(info.toString());
-            }
+            dirContent = sftpClient.ls(workingDirectory);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return dirContent;
     }
 
-    public Session.Command execCmd(String cmd){
-        //TODO: throw exceptions
-        try {
+    public boolean cd(String dir) {
 
-            session= this.sshClient.startSession();
-            return session.exec(cmd);
-        } catch (ConnectionException e) {
-            e.printStackTrace();
-        } catch (TransportException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return false;
     }
 
-    private Session.Shell shell;
-    public void createTerminal() throws IOException {
-        //sshClient.authPublickey(System.getProperty("user.name"));
+    public boolean rm(String file) {
 
-        final Session session = sshClient.startSession();
-        try {
-
-            session.allocateDefaultPTY();
-
-
-            shell = session.startShell();
-
-             StreamCopier sc = new StreamCopier(shell.getInputStream(), System.out);
-                   sc.bufSize(shell.getLocalMaxPacketSize())
-                    .spawn("stdout");
-
-            sc.listener(new StreamCopier.Listener() {
-                @Override
-                public void reportProgress(long transferred) throws IOException {
-                    System.out.println("\n###### createIs : " + transferred);
-                }
-            });
-
-            Event<IOException> event =  sc.spawnDaemon("xyp");
-
-
-            System.out.println("################################### TEST");
-
-            StreamCopier scerr = new StreamCopier(shell.getErrorStream(), System.err);
-                    scerr.bufSize(shell.getLocalMaxPacketSize())
-                    .spawn("stderr");
-
-            scerr.listener(new StreamCopier.Listener() {
-                @Override
-                public void reportProgress(long transferred) throws IOException {
-                    System.out.println("\ntrans-err: "+transferred);
-                }
-            });
-
-            // Now make System.in act as stdin. To exit, hit Ctrl+D (since that results in an EOF on System.in)
-            // This is kinda messy because java only allows console input after you hit return
-            // But this is just an example... a GUI app could implement a proper PTY
-//            new StreamCopier(System.in, shell.getOutputStream())
-//                    .bufSize(shell.getRemoteMaxPacketSize())
-//                    .copy();
-
-            System.out.println("################################### BEST");
-
-        } finally {
-           // session.close();
-        }
+        return false;
     }
 
-    public void writeToPseudoTerminal(String cmd) throws IOException {
-        InputStream is = new ByteArrayInputStream( (cmd+"\n").getBytes() );
+    public boolean rmDir(String dir) {
 
-        StreamCopier sc = new StreamCopier(is, shell.getOutputStream());
-                sc.bufSize(shell.getRemoteMaxPacketSize())
-                .copy();
-
-        sc.listener(new StreamCopier.Listener() {
-            @Override
-            public void reportProgress(long transferred) throws IOException {
-                System.out.println("\n####### write2pseudo: "+transferred);
-            }
-        });
+        return false;
     }
 }

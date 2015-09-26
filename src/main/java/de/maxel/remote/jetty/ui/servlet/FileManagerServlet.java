@@ -8,9 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import de.maxel.remote.Maxel;
-import de.maxel.remote.ssh.schell.commands.Shell;
-
 import java.util.List;
 
 /**
