@@ -21,7 +21,6 @@ import java.util.List;
 public class FileManagerServlet extends HttpServlet {
 
     private static final String GET_DIRECTORY_COMMAND = "find . -maxdepth 1 -type d";
-    Shell shell = new Shell("max", "localhost", "La24!mmae");
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
@@ -29,12 +28,12 @@ public class FileManagerServlet extends HttpServlet {
         String cdParam = request.getParameter("cd");
 
         if (cdParam != null) {
-            shell.write("cd " + cdParam);
-        }
-        String commandRes = shell.write(GET_DIRECTORY_COMMAND);
 
-        List<String> directoryContent = getListFromString(commandRes);
-        request.setAttribute("directories", directoryContent);
+        }
+        //String commandRes = shell.write(GET_DIRECTORY_COMMAND);
+
+        //List<String> directoryContent = getListFromString(commandRes);
+        //request.setAttribute("directories", directoryContent);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/ui/file-manager.jsp");
         try {
