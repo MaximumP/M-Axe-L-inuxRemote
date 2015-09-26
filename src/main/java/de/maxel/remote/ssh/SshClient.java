@@ -12,7 +12,6 @@ import java.io.IOException;
 public class SshClient {
 
     private SSHClient sshClient = null;
-    private String workingDirectory = "~/";
 
     /**
      * author Alexander
@@ -36,16 +35,9 @@ public class SshClient {
         sshClient = new SSHClient();
 
         try {
-            Session session = sshClient.startSession();
-            Session.Command cmd = session.exec("pdw\n");
-            workingDirectory = IOUtils.readFully(cmd.getInputStream()).toString();
-            cmd.close();
-            session.close();
-
             sshClient.addHostKeyVerifier(hostKey);
             sshClient.connect(host);
             sshClient.authPassword(username, password);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
