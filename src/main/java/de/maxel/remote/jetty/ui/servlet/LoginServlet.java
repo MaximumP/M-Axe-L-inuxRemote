@@ -21,7 +21,7 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
         response.setStatus(HttpServletResponse.SC_OK);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/ui/layout.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/ui/Login.jsp");
         try {
             dispatcher.forward(request, response);
         } catch (ServletException e) {

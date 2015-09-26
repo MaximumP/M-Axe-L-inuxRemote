@@ -3,166 +3,162 @@ package de.maxel.remote.ssh.schell.commands;
 import com.jcraft.jsch.*;
 
 import java.io.*;
+import java.util.Scanner;
 
 /**
  * Created by max on 20.09.15.
+ *
+ * Emulates an shell of the remote host
  */
 public class Shell {
 
-    private String userName;
-    private String host;
-    private String password;
     private Session session;
     private Channel channel;
 
+    //output stream to write to the remote shell
     private PipedOutputStream out;
+    //input stream the remote shell writes in
     private PipedInputStream in;
 
     public Shell(String userName, String host, String password) {
-        this.userName = userName;
-        this.host = host;
-        this.password = password;
-        initializeShell();
-    }
-
-    private void initializeShell() {
         JSch jsch = new JSch();
         try {
             session = jsch.getSession(userName, host);
-            session.setPassword(password);
-            session.setUserInfo(new ShellUserInfo());
-            session.connect(30000);
+        } catch (JSchException e) {
+            e.printStackTrace();
+        }
+        session.setPassword(password);
+        initializeShell();
+    }
 
-            //InputStream in = new PipedInputStream();
-            //OutputStream out = new PipedOutputStream();
-            //out = new PipedOutputStream();
-            //in = new PipedInputStream(out);
-            //read();
+    /**
+     * Initialize the shell
+     */
+    private void initializeShell() {
+        try {
+
+            session.setUserInfo(new ShellUserInfo());
+            session.connect();
+            //open a shell channel
             channel = session.openChannel("shell");
 
-            InputStream inputStream = new PipedInputStream();
-            out = new PipedOutputStream((PipedInputStream)inputStream);
+            //create a input stream which "listen" to our output stream
+            final InputStream inputStream = new PipedInputStream();
+            //connect the output stream we use to write to the input stream of the shell
+            out = new PipedOutputStream((PipedInputStream) inputStream);
             channel.setInputStream(inputStream);
 
-            OutputStream outputStream = new PipedOutputStream();
-            in = new PipedInputStream((PipedOutputStream)outputStream);
+            //create a output stream the shell can write to
+            final OutputStream outputStream = new PipedOutputStream();
+            //receives the data of the shell
+            in = new PipedInputStream((PipedOutputStream) outputStream);
             channel.setOutputStream(outputStream);
-
             channel.connect();
+            read();
+            listenToTerminal();
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            Thread readThread = new Thread(() -> {
-                while(true) {
-                    try {
-                        reader.mark(5);
-
-                    int tmp = reader.read();
-                    if (tmp == 0x003) {
-                        throw new UnsupportedOperationException();
-                        //break;
-                    } else {
-                        reader.reset();
-                        System.out.println(reader.readLine());
-                    }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            readThread.start();
-
-
-            out.write(new String("ls -lF\n").getBytes());
-
-//            while (true){
-//                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//                String bla = br.readLine();
-//                write(bla==null?"":bla);
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            writer.write(br.readLine());
-            Thread.sleep(2000);
-            Thread.sleep(2000);
-                write("ls -f");
-
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
+    /**
+     *
+     * http://stackoverflow.com/a/26473083/1847899
+     */
+    private void listenToTerminal(){
+        while (true) {
+            Scanner scanner = new Scanner(System.in);
+            String x = scanner.nextLine();
+            write(x);
+        }
+    }
+
+    /**
+     * sends a command to the shell
+     * @param command: the command to be executed on the remove shell
+     *                 a new line has to be used to separate commands
+     */
     public void write(String command) {
+        if (!command.endsWith("\n"))
+            command = command + "\n";
         try {
-            BufferedWriter input = new BufferedWriter(new OutputStreamWriter(out));
-            input.write(command);
-            input.flush();
+            out.write(command.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * reads the result of the executed commands
+     */
+    private void read() {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        //read in a new thread since we want to listen as long as the user uses "his" shell
+        Thread readThread = new Thread(() -> {
+            try {
+                while (true) {
+                    reader.mark(5);
+                    //TODO check
+                    //end of stream. I am not sure if this works
+                    int tmp = reader.read();
+                    if (tmp == -1) {
+                        reader.close();
+                        break;
+                    }
+                    else {
+                        reader.reset();
+                        String line = reader.readLine();
+                        //debug output
+                        System.out.println(line);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        readThread.start();
+    }
+
+    /**
+     * closes the shell and our streams
+     */
+    public void close() {
+        write("exit\n");
+        channel.disconnect();
+        session.disconnect();
+        try {
+            out.close();
+            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public String read() {
-        StringBuilder stringBuilder = new StringBuilder();
-        Thread readThread = new Thread(() -> {
-            BufferedReader output = new BufferedReader(new InputStreamReader(in));
-            boolean end = false;
-            try {
-                while (true) {
-                    output.mark(32);
-                    //int tmp = output.read();
-                    //if (tmp == 109) end = true;
-                    //else {
-                        output.reset();
-                        String line = output.readLine();
-                        stringBuilder.append(line).append("\n");
-                        System.out.println(line);
-                        end = false;
-                    //}
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    private static class ShellUserInfo implements UserInfo {
 
-        });
-        readThread.start();
-        return null;// stringBuilder.toString();
+        @Override
+        public String getPassphrase() {
+            return null;
+        }
+        @Override
+        public String getPassword() {
+            return null;
+        }
+        @Override
+        public boolean promptPassword(String s) {
+            return false;
+        }
+        @Override
+        public boolean promptPassphrase(String s) {
+            return false;
+        }
+        @Override
+        public boolean promptYesNo(String s) {
+            return true;
+        }
+        @Override
+        public void showMessage(String s) {}
     }
-
-    public String executeCommand(String command) {
-        return null;
-    }
-
-private static class ShellUserInfo implements UserInfo {
-
-    @Override
-    public String getPassphrase() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public boolean promptPassword(String s) {
-        return false;
-    }
-
-    @Override
-    public boolean promptPassphrase(String s) {
-        return false;
-    }
-
-    @Override
-    public boolean promptYesNo(String s) {
-        return true;
-    }
-
-    @Override
-    public void showMessage(String s) {
-
-    }
-}
 }
