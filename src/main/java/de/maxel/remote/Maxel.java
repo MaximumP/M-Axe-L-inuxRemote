@@ -6,6 +6,8 @@ import de.maxel.remote.jetty.server.JettyServer;
 import de.maxel.remote.jetty.ui.ServerRunner;
 import de.maxel.remote.ssh.SSHJsftp;
 import de.maxel.remote.ssh.schell.commands.Shell;
+import net.schmizz.sshj.common.IOUtils;
+import net.schmizz.sshj.connection.channel.direct.Session;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 
@@ -32,7 +34,50 @@ public class Maxel {
                 properties.getPassword(), properties.getHostkey());
         testsFtp.printDirContent(".");
 
+        Session.Command cmd = testsFtp.execCmd("cd ./julia");
+        try {
+            System.out.println(IOUtils.readFully(cmd.getInputStream()).toString());
+            cmd.join(5, TimeUnit.SECONDS);
+            System.out.println("\n** exit - status: " + cmd.getExitStatus());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        cmd = testsFtp.execCmd("ls -f");
+        try {
+            System.out.println(IOUtils.readFully(cmd.getInputStream()).toString());
+            cmd.join(5, TimeUnit.SECONDS);
+            System.out.println("\n** exit status: " + cmd.getExitStatus());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            testsFtp.createTerminal();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("write to pseudo terminal");
+        try {
+            testsFtp.writeToPseudoTerminal("ls -f");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            testsFtp.writeToPseudoTerminal("cd julia");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            testsFtp.writeToPseudoTerminal("cd julia");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+/*
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         contexts.setHandlers(new Handler[]{new AppContextBuilder().buildWebAppContext()});
 
@@ -40,7 +85,7 @@ public class Maxel {
         jettyServer.setHandler(contexts);
 
         Runnable runner = () -> new ServerRunner(jettyServer);
-        EventQueue.invokeLater(runner);
+        EventQueue.invokeLater(runner);*/
     }
 
     private static void loadPropsTmp(){
