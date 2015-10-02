@@ -1,5 +1,7 @@
 package de.maxel.remote.jetty.ui.servlet;
 
+import de.maxel.remote.ssh.SshClient;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +30,19 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-        //TODO: Implement
+        String userName = request.getParameter("user");
+        String host = request.getParameter("host");
+        String password = request.getParameter("password");
+
+        //TODO: ask user if he wants to accept the host key
+        SshClient.getInstance().connect(host, userName, password,
+                "e8:1d:fd:df:09:5f:c5:7c:ea:47:a6:51:09:98:87:02");
+        System.out.println("Session connected");
+        try {
+            response.sendRedirect("/maxel/FileManager");
+        } catch (IOException e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
     }
 }

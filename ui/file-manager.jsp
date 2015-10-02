@@ -1,4 +1,5 @@
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
+<%@ page import="net.schmizz.sshj.sftp.RemoteResourceInfo;" %>
 
 <!DOCTYPE html>
 <html>
@@ -11,12 +12,24 @@
 <body>
 <%@include file='navbar.jsp'%>
 <div class="content">
-    <%  ArrayList<String> directories = (ArrayList<String>) request.getAttribute("directories");
-        for (String content: directories) {
+    <a href="/maxel/FileManager?cd='..'">..</a>
+    <%  List<RemoteResourceInfo> directories = (List<RemoteResourceInfo>) request.getAttribute("directories");
+        for (RemoteResourceInfo content: directories) {
+            if (content.isDirectory()) {
     %>
-    <div>
-        <a href="/maxel/FileManager?cd=<%=content%>"><%=content%></a>
-    </div>
+            <div>
+                <a href="/maxel/FileManager?cd=<%=content.getName()%>">
+                    <img src="ui/img/folder.svg" alt="folder icon" height="42" width="42" />
+                    <br>
+                    <%=content.getName()%>
+                </a>
+            </div>
+            <%} else {%>
+                <a href="/maxel/FileManager?cd=<%=content.getName()%>">
+                    <img src="ui/img/file.svg" alt="file icon" height="42" width="42" />
+                    <%=content.getName()%>
+                </a>
+            <%}%>
     <%}%>
 </div>
 </body>

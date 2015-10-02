@@ -1,12 +1,16 @@
 package de.maxel.remote.jetty.ui.servlet;
 
+import de.maxel.remote.ssh.SSHJsftp;
+import de.maxel.remote.ssh.SshClient;
+import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.sftp.RemoteResourceInfo;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import java.util.List;
 
@@ -17,20 +21,32 @@ import java.util.List;
  */
 public class FileManagerServlet extends HttpServlet {
 
-    private static final String GET_DIRECTORY_COMMAND = "find . -maxdepth 1 -type d";
+    private SSHJsftp sftpClient = null;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
-        String cdParam = request.getParameter("cd");
-
-        if (cdParam != null) {
-
+        try {
+            if (sftpClient == null) {
+                SSHClient client = SshClient.getInstance().getSshClient();
+                sftpClient = new SSHJsftp(client);
+            }
+        } catch (IOException e) {
+            // TODO: handle exception
+            e.printStackTrace();
         }
-        //String commandRes = shell.write(GET_DIRECTORY_COMMAND);
 
-        //List<String> directoryContent = getListFromString(commandRes);
-        //request.setAttribute("directories", directoryContent);
+        String cdParam = request.getParameter("cd");
+        if (cdParam != null) {
+            sftpClient.cd(cdParam);
+        }
+
+        List<RemoteResourceInfo> dirContent = sftpClient.ls();
+        request.setAttribute("directories", dirContent);
+        /*for (RemoteResourceInfo info : dirContent)
+        {
+            System.out.println(info.toString());
+        }*/
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/ui/file-manager.jsp");
         try {
@@ -40,12 +56,4 @@ public class FileManagerServlet extends HttpServlet {
         }
     }
 
-    private List<String> getListFromString(String commandRes) {
-        String[] files = commandRes.split("./");
-        List<String> result = new ArrayList<>();
-        for (int i = 0; i < files.length -1; i++) {
-            result.add(files[i].trim());
-        }
-        return result;
-    }
 }

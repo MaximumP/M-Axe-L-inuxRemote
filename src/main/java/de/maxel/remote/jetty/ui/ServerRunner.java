@@ -1,6 +1,8 @@
 package de.maxel.remote.jetty.ui;
 
 import de.maxel.remote.jetty.server.JettyServer;
+import de.maxel.remote.ssh.SshClient;
+import net.schmizz.sshj.SSHClient;
 
 /**
  * Created by max on 18.09.15.
@@ -18,7 +20,12 @@ public class ServerRunner {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (server.isRunning()) {
                 try {
+                    // stop the jetty server
                     server.stop();
+                    SSHClient client = SshClient.getInstance().getSshClient();
+                    // close the ssh client
+                    if (client != null && client.isConnected())
+                        client.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
