@@ -1,4 +1,4 @@
-package de.maxel.remote.jetty.ui;
+package de.maxel.remote.jetty.server;
 
 import de.maxel.remote.jetty.server.JettyServer;
 import de.maxel.remote.ssh.SshClient;

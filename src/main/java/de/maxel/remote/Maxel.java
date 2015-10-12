@@ -1,22 +1,12 @@
 package de.maxel.remote;
 
-import de.maxel.remote.config.ConfigProperties;
-import de.maxel.remote.jetty.context.AppContextBuilder;
+import de.maxel.remote.jetty.server.AppContextBuilder;
 import de.maxel.remote.jetty.server.JettyServer;
-import de.maxel.remote.jetty.ui.ServerRunner;
-import de.maxel.remote.ssh.SSHJsftp;
-import de.maxel.remote.ssh.SshClient;
-import net.schmizz.sshj.common.IOUtils;
-import net.schmizz.sshj.connection.channel.direct.Session;
+import de.maxel.remote.jetty.server.ServerRunner;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by max on 19.09.15.
