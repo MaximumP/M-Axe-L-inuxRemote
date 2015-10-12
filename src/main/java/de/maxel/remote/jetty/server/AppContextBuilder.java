@@ -20,17 +20,11 @@ public class AppContextBuilder {
         ServletHolder servletHolder = new ServletHolder(ServletContainer.class);
         servletHolder.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", "com.sun.jersey.api.core.PackagesResourceConfig");
         servletHolder.setInitParameter("com.sun.jersey.config.property.packages", "de.maxel.remote.jetty.rest");
-        //TODO: enable json mapping
-        //servletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
-
+        servletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", "true");
 
         ServletContextHandler contextHandler = new ServletContextHandler();
         contextHandler.addServlet(servletHolder, "/maxel/*");
 
-        /*WebAppContext context = new WebAppContext();
-        context.setDescriptor(context + "/WEB-INF/web.xml");
-        context.setResourceBase(".");
-        context.setContextPath("/maxel");*/
         return contextHandler;
     }
 }

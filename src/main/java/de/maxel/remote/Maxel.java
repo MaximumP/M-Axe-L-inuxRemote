@@ -16,19 +16,6 @@ import java.awt.*;
 public class Maxel {
 
     public static void main(String[] arg) {
-        //Load Properties
-        //loadPropsTmp();
-        /*ConfigProperties properties = ConfigProperties.getInstance();
-
-        SshClient.getInstance().connect(properties.getHost(), properties.getUser(),
-                properties.getPassword(), properties.getHostkey());
-
-
-        SSHJsftp testsFtp = new SSHJsftp(SshClient.getInstance().getSshClient());
-        testsFtp.cd("..");
-        testsFtp.cd("..");
-        testsFtp.cd("etc");*/
-
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         contexts.setHandlers(new Handler[]{new AppContextBuilder().buildWebAppContext()});
 

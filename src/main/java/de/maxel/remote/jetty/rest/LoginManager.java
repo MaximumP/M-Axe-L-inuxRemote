@@ -1,9 +1,8 @@
 package de.maxel.remote.jetty.rest;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import de.maxel.remote.jetty.rest.model.SSHUserModel;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -15,8 +14,9 @@ import javax.ws.rs.core.MediaType;
 public class LoginManager {
 
     @GET
-    public String getLoginForm() {
-
-        return "LoginForm";
+    public SSHUserModel getLoginForm() {
+        return new SSHUserModel("max", "123qwe", "localhost");
     }
+
+
 }
