@@ -1,9 +1,7 @@
 package de.maxel.remote.ssh;
 
+import de.maxel.remote.jetty.rest.model.SSHUserModel;
 import net.schmizz.sshj.SSHClient;
-import net.schmizz.sshj.common.IOUtils;
-import net.schmizz.sshj.connection.channel.direct.Session;
-
 import java.io.IOException;
 
 /**
@@ -31,15 +29,22 @@ public class SshClient {
         return Holder.instance;
     }
 
-    public void connect(String host, String username, String password, String hostKey) {
+    public void connect(SSHUserModel model) throws IOException {
+        connect(model.getHost(),
+                model.getUser(),
+                model.getPassword(),
+                "");
+    }
+
+    public void connect(String host, String username, String password, String hostKey) throws IOException {
         sshClient = new SSHClient();
-        try {
-            sshClient.addHostKeyVerifier(hostKey);
-            sshClient.connect(host);
-            sshClient.authPassword(username, password);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        sshClient.addHostKeyVerifier(hostKey);
+        sshClient.connect(host);
+        sshClient.authPassword(username, password);
+    }
+
+    public void disconnect() throws IOException{
+        sshClient.disconnect();
     }
 
     public SSHClient getSshClient(){
