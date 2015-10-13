@@ -2,9 +2,12 @@
   <dictionary name="max">
     <words>
       <w>doctype</w>
+      <w>filemanager</w>
       <w>jsftp</w>
       <w>maxel</w>
+      <w>mkdir</w>
       <w>navbar</w>
+      <w>rmdir</w>
       <w>schmizz</w>
       <w>sshj</w>
     </words>

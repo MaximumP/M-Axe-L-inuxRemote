@@ -16,6 +16,7 @@ import java.awt.*;
 public class Maxel {
 
     public static void main(String[] arg) {
+
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         contexts.setHandlers(new Handler[]{new AppContextBuilder().buildWebAppContext()});
 
@@ -25,17 +26,4 @@ public class Maxel {
         Runnable runner = () -> new ServerRunner(jettyServer);
                 EventQueue.invokeLater(runner);
     }
-
-    /*private static void loadPropsTmp(){
-        try {
-        Properties prop = new Properties();
-        InputStream input = null;
-        input = new FileInputStream("maxel.properties");
-            prop.load(input);
-           ConfigProperties.getInstance().init(prop);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
 }
