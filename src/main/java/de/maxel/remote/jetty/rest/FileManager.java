@@ -24,7 +24,8 @@ public class FileManager {
 
     /**
      * Gets the directory content
-     * @param destination absolute path to a folder
+     *
+     * @param destination absolute path to the folder to display
      * @return the directory content
      */
     @GET
@@ -54,6 +55,7 @@ public class FileManager {
 
     /**
      * Creates a folder
+     *
      * @param folder absolute path to the folder to create
      */
     @POST
@@ -78,7 +80,8 @@ public class FileManager {
     }
 
     /**
-     * renames a folder
+     * Renames a folder
+     *
      * @param oldName absolute path to the folder to rename
      * @param newName absolute path with the new name
      */
@@ -108,6 +111,7 @@ public class FileManager {
 
     /**
      * Deletes a folder
+     *
      * @param folder absolute path to the folder to delete
      */
     @DELETE

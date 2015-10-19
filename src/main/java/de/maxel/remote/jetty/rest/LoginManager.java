@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by max on 12.10.15.
  *
- * initiates and ends a ssh session
+ * provides methods to login and logout of a ssh session
  */
 @Path("/account")
 @Produces(MediaType.APPLICATION_JSON)
@@ -19,6 +19,7 @@ import java.io.IOException;
 public class LoginManager {
 
     /**
+     * Initiates a ssh session to a remote machine
      *
      * @param userModel contains the username, password and host
      * @return The state of the login action
@@ -29,7 +30,6 @@ public class LoginManager {
         RestResponse response = new RestResponse();
         try {
             SshClient.getInstance().connect(userModel);
-
             response.setResponseState(RestResponse.ResponseState.Success);
             response.setMessage("Connected to " + userModel.getUser() + "@" + userModel.getHost());
             return response;
@@ -42,6 +42,7 @@ public class LoginManager {
     }
 
     /**
+     * Closes the ssh connection
      *
      * @return the state of the logout action
      */

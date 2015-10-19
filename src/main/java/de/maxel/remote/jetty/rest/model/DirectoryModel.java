@@ -9,7 +9,7 @@ import java.util.List;
  * Created by max on 12.10.15.
  *
  * POJO Object for a directory
- * is serialized to a json or xml by the javax.ws library
+ * is serialized to a json or xml to be sent to the client
  */
 @XmlRootElement
 public class DirectoryModel {

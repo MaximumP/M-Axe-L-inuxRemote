@@ -20,13 +20,22 @@ import java.util.Scanner;
 
 /**
  * Created by max on 12.10.15.
+ *
+ * Software manager to install, search, delete and update the remote software
  */
-
 @Path("/software")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SoftwareManager {
 
+    /**
+     * Search for software in the apt repositories.
+     * Uses the apt-cache search command
+     *
+     * @param searchString search string
+     * @return the result of the search.
+     * In form of a key value pair (key: package-name, value: package-description)
+     */
     @GET
     @Path("/search/{searchString}")
     public RestResponse searchPackage(@PathParam("searchString") String searchString) {
@@ -51,6 +60,13 @@ public class SoftwareManager {
         }
     }
 
+    /**
+     * Installs a package
+     * Uses the apt-get install command
+     *
+     * @param packageName the package to be installed
+     * @return success on a successful execution, error on an error
+     */
     @PUT
     @Path("/install/{packageName}")
     public RestResponse installPackage(@PathParam("packageName") String packageName){
@@ -73,41 +89,36 @@ public class SoftwareManager {
         return null;
     }
 
-    private void readToPrompt(InputStream inputStream) {
-
-        String pattern = "[sudo] password for max:";
-        while(true) {
-            try {
-                char content;
-                for (int i = 0; i < pattern.length(); i++) {
-                    content = (char)inputStream.read();
-                    System.out.print(content);
-                    if (content == pattern.charAt(i)){
-                        if (i == pattern.length()-1) {
-                            return;
-                        }
-                    } else {
-                        break;
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
+    /**
+     * Gets the current repository list
+     * Uses the apt-get update command
+     *
+     * @return success on a successful execution, error on an error
+     */
     @POST
     @Path("/update")
     public RestResponse update(){
         return null;
     }
 
+    /**
+     * Upgrades the installed software
+     * Uses the apt-get upgrade method
+     *
+     * @return success on a successful execution, error on an error
+     */
     @POST
     @Path("/upgrade")
     public RestResponse upgrade(){
         return null;
     }
 
+    /**
+     * Removes software
+     * Uses apt-get remove command
+     *
+     * @return success on a successful execution, error on an error
+     */
     @DELETE
     @Path("/remove")
     public RestResponse remove(){
