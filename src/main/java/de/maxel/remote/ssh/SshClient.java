@@ -6,6 +6,7 @@ import java.io.IOException;
 
 /**
  * Created by Alexander on 26.09.2015.
+ *
  */
 public class SshClient {
 

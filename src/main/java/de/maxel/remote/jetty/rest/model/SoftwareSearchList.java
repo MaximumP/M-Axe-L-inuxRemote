@@ -26,7 +26,11 @@ public class SoftwareSearchList {
         String[] packages = searchResult.split("\n");
         for (String aPackage : packages) {
             String[] packageName = aPackage.split(" - ");
-            softwareList.add(new Pair<>(packageName[0], packageName[1]));
+            if(packageName.length>1) {
+                softwareList.add(new Pair<>(packageName[0], packageName[1]));
+            }else{
+                softwareList.add(new Pair<>("", ""));
+            }
         }
     }
 
