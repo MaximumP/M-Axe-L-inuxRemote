@@ -33,7 +33,7 @@ public class SshClient {
         connect(model.getHost(),
                 model.getUser(),
                 model.getPassword(),
-                "");
+                "e8:1d:fd:df:09:5f:c5:7c:ea:47:a6:51:09:98:87:02");
     }
 
     public void connect(String host, String username, String password, String hostKey) throws IOException {

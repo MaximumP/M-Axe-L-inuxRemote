@@ -1,5 +1,6 @@
 package de.maxel.remote.jetty.rest;
 
+import de.maxel.remote.jetty.rest.model.RestResponse;
 import de.maxel.remote.jetty.rest.model.SSHUserModel;
 import de.maxel.remote.ssh.SshClient;
 
@@ -12,7 +13,7 @@ import java.io.IOException;
  *
  * initiates and ends a ssh session
  */
-@Path("/login")
+@Path("/account")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class LoginManager {
@@ -23,14 +24,21 @@ public class LoginManager {
      * @return The state of the login action
      */
     @POST
-    public String login(SSHUserModel userModel) {
+    @Path("/login")
+    public RestResponse login(SSHUserModel userModel) {
+        RestResponse response = new RestResponse();
         try {
             SshClient.getInstance().connect(userModel);
+
+            response.setResponseState(RestResponse.ResponseState.Success);
+            response.setMessage("Connected to " + userModel.getUser() + "@" + userModel.getHost());
+            return response;
         } catch (IOException e) {
             e.printStackTrace();
-            return "{\"state\": \"failure\"}";
+            response.setResponseState(RestResponse.ResponseState.Error);
+            response.setMessage("Error wile connecting to Server: \n" + e.getMessage());
+            return response;
         }
-        return "{\"state\": \"success\"}";
     }
 
     /**
@@ -39,13 +47,18 @@ public class LoginManager {
      */
     @POST
     @Path("/logout")
-    public String logout() {
+    public RestResponse logout() {
+        RestResponse response = new RestResponse();
         try {
             SshClient.getInstance().disconnect();
+            response.setResponseState(RestResponse.ResponseState.Success);
+            response.setMessage("Disconnected");
+            return response;
         } catch (IOException e) {
             e.printStackTrace();
-            return "{\"state\": \"failure\"}";
+            response.setResponseState(RestResponse.ResponseState.Error);
+            response.setMessage("Error while disconnecting: \n" + e.getMessage());
+            return response;
         }
-        return "{\"state\": \"success\"}";
     }
 }

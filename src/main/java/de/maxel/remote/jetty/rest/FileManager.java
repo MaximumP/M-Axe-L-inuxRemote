@@ -1,6 +1,7 @@
 package de.maxel.remote.jetty.rest;
 
 import de.maxel.remote.jetty.rest.model.DirectoryModel;
+import de.maxel.remote.jetty.rest.model.RestResponse;
 import de.maxel.remote.ssh.SshClient;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.sftp.RemoteResourceInfo;
@@ -28,19 +29,27 @@ public class FileManager {
      */
     @GET
     @Path("/ls/{destination}")
-    public DirectoryModel ls(@PathParam("destination") String destination) {
-        DirectoryModel directoryModel = null;
+    public RestResponse ls(@PathParam("destination") String destination) {
+        RestResponse response = new RestResponse();
+        DirectoryModel directoryModel;
         try {
             SSHClient sshClient = SshClient.getInstance().getSshClient();
             SFTPClient sftpClient = sshClient.newSFTPClient();
             directoryModel = new DirectoryModel();
             directoryModel.setCurrentDir(destination);
             List<RemoteResourceInfo> dirList = sftpClient.ls(destination);
+            sftpClient.close();
+
             directoryModel.setDirContent(dirList);
+            response.setResponseState(RestResponse.ResponseState.Success);
+            response.setModel(directoryModel);
+            return response;
         } catch (IOException e) {
             e.printStackTrace();
+            response.setMessage("Error while reading file system: \n" + e.getMessage());
+            response.setResponseState(RestResponse.ResponseState.Error);
+            return response;
         }
-        return directoryModel;
     }
 
     /**
@@ -49,17 +58,23 @@ public class FileManager {
      */
     @POST
     @Path("/mkdir/{folder}")
-    public String mkdir(@PathParam("folder") String folder) {
-
+    public RestResponse mkdir(@PathParam("folder") String folder) {
+        RestResponse response = new RestResponse();
         try {
             SSHClient sshClient = SshClient.getInstance().getSshClient();
             SFTPClient sftpClient = sshClient.newSFTPClient();
             sftpClient.mkdir(folder);
+            sftpClient.close();
+            String folderName = folder.substring(folder.lastIndexOf('/'));
+            response.setResponseState(RestResponse.ResponseState.Success);
+            response.setMessage("Created folder: " + folderName);
+            return response;
         } catch (IOException e) {
             e.printStackTrace();
-            return "{\"state\": \"failure\"}";
+            response.setMessage("Error while creating directory: \n" + e.getMessage());
+            response.setResponseState(RestResponse.ResponseState.Error);
+            return response;
         }
-        return "{\"state\": \"success\"}";
     }
 
     /**
@@ -69,17 +84,26 @@ public class FileManager {
      */
     @PUT
     @Path("/rename/{oldname}/{newname}")
-    public String rename(@PathParam("oldname") String oldName,
+    public RestResponse rename(@PathParam("oldname") String oldName,
                        @PathParam("newname") String newName) {
+        RestResponse response = new RestResponse();
         try {
             SSHClient sshClient = SshClient.getInstance().getSshClient();
             SFTPClient sftpClient = sshClient.newSFTPClient();
             sftpClient.rename(oldName, newName);
+            sftpClient.close();
+            String oldFolderName = oldName.substring(oldName.lastIndexOf('/'));
+            String newFolderName = newName.substring(newName.lastIndexOf('/'));
+            response.setResponseState(RestResponse.ResponseState.Success);
+            response.setMessage("Folder " + oldFolderName + "renamed to " + newFolderName);
+            //TODO: return new model? or handle it on the client side?
+            return response;
         }catch (IOException e) {
             e.printStackTrace();
-            return "{\"state\": \"failure\"}";
+            response.setResponseState(RestResponse.ResponseState.Error);
+            response.setMessage("Error while renaming folder: \n" + e.getMessage());
+            return response;
         }
-        return "{\"state\": \"success\"}";
     }
 
     /**
@@ -88,16 +112,22 @@ public class FileManager {
      */
     @DELETE
     @Path("/rmdir/{folder}")
-    public String rmdir(@PathParam("folder") String folder) {
-
+    public RestResponse rmdir(@PathParam("folder") String folder) {
+        RestResponse response = new RestResponse();
         try {
             SSHClient sshClient = SshClient.getInstance().getSshClient();
             SFTPClient sftpClient = sshClient.newSFTPClient();
             sftpClient.rmdir(folder);
+            sftpClient.close();
+            String folderName = folder.substring(folder.lastIndexOf('/'));
+            response.setResponseState(RestResponse.ResponseState.Success);
+            response.setMessage("Folder " + folderName + "deleted");
+            return response;
         } catch (IOException e) {
             e.printStackTrace();
-            return "{\"state\": \"failure\"}";
+            response.setResponseState(RestResponse.ResponseState.Error);
+            response.setMessage("Error while deleting folder: \n" + e.getMessage());
+            return response;
         }
-        return "{\"state\": \"success\"}";
     }
 }
